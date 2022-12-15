@@ -44,10 +44,10 @@ def cli(ctx, config, verbose):
     ctx.obj["verbose"] = verbose
 
 
-@cli.command("init")
+@cli.command("init", help="Initialises the k8senv config")
 @click.option("--env", multiple=True, default=["prod", "stage"], help="The environment names to initialise")
 @click.option("--update-gitignore/--no-update-gitignore", default=True, help="Flag to add the config dir to gitignore")
-@click.option("--config-dir", default="./.kube", help="Flag to add the config dir to gitignore")
+@click.option("--config-dir", default="./.kube", help="The directory to store the cluster configs")
 @click.option("--force/--no-force", default=False, help="Flag to override the existing config if it exists")
 @click.pass_context
 def init(ctx, env, update_gitignore, config_dir, force):
