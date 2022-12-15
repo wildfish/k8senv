@@ -93,3 +93,29 @@ Usage: k8senv run [OPTIONS] ENV [CMD]...
 Options:
   --help  Show this message and exit.
 ```
+
+Listing
+-------
+
+To list all the available configured environments run:
+
+```shell
+$> k8senv ls
+```
+
+This will print all the environment names along with some validation:
+
+```
+local
+prod (config error)
+stage (cluster config file missing)
+```
+
+**NOTE:** No validation is performed on the cluster config, only the k8senv config.
+
+```
+Usage: k8senv ls [OPTIONS]
+
+Options:
+  --help  Show this message and exit
+```

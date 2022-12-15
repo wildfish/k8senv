@@ -52,10 +52,11 @@ def cli(ctx, config, verbose):
 @click.pass_context
 def init(ctx, env, update_gitignore, config_dir, force):
     if not force and os.path.exists(ctx.obj["k8senv_config_path"]):
-        click.echo(
+        click.secho(
             f"Path {ctx.obj['k8senv_config_path']} already exists, either remove it, provide a different config path "
             "using --config or use the --force flag to override the existing config",
             err=True,
+            fg="red",
         )
         return 1
 
@@ -112,3 +113,26 @@ def run(ctx, env, cmd):
         click.echo(f"Running command '{' '.join(command)}'")
 
     return subprocess.run(command)
+
+
+@cli.command(
+    help=(
+        "Lists all environments. If there is a configuration error or missing cluster config a warning is given "
+        "(no validation is done on the kubernetes config, only the k8senv config)"
+     )
+)
+@click.pass_context
+def ls(ctx):
+    with open(ctx.obj["k8senv_config_path"]) as f:
+        raw_config = yaml.load(f, yaml.SafeLoader)
+
+    for env in raw_config.get("envs", {}).keys():
+        try:
+            config = Config.from_source(ctx.obj["k8senv_config_path"], env)
+
+            if os.path.exists(config.kubeconfig):
+                click.secho(env, fg="green")
+            else:
+                click.secho(f"{env} (cluster config file missing)", err=True, fg="yellow")
+        except TypeError:
+            click.secho(f"{env} (config error)", fg="red")
