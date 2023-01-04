@@ -31,10 +31,16 @@ Once the config is setup you will need to generate your kube configs based
 on the instructions of your provider and move the entry to the relevant file
 in the `.kube` directory.
 
-For example, on digital ocean, to save the cluster to the stage config run:
+For example, using k3d, to save the cluster to the stage config run:
 
 ```shell
-$> KUBECONFIG="./.kube/stage" doctl kubernetes cluster kubeconfig save <cluster-id>
+$> KUBECONFIG="./.kube/stage.yaml" k3d cluster create test
+```
+
+or:
+
+```shell
+$> k3d kubeconfig get test > ./.kube/stage.yaml
 ```
 
 ```
@@ -73,7 +79,7 @@ $> k8senv run stage -- config view
 To view all pods in the prod environment run: 
 
 ```shell
-$> k8senv run stage -- get pod
+$> k8senv run prod -- get pod
 ```
 
 The configs are normal kubernetes configs so anything you can do with kubectl

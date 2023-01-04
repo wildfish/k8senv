@@ -1,5 +1,6 @@
-from setuptools import setup
 import os
+
+from setuptools import setup
 
 
 def load_requirements():
@@ -8,18 +9,18 @@ def load_requirements():
 
 
 setup(
-    name='k8senv',
-    version='0.0.0',
-    packages=['k8senv'],
-    url='',
-    license='BSD',
-    author='Wildfish',
-    author_email='developers@wildfish.com',
-    description='Manages access to multiple kubernetes environments',
+    name="k8senv",
+    version="0.0.0",
+    packages=["k8senv"],
+    url="",
+    license="BSD",
+    author="Wildfish",
+    author_email="developers@wildfish.com",
+    description="Manages access to multiple kubernetes environments",
     install_requires=load_requirements(),
     entry_points={
-        'console_scripts': [
-            'k8senv = k8senv:cli',
+        "console_scripts": [
+            "k8senv = k8senv:cli",
         ],
     },
 )

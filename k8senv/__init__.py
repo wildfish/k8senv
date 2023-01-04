@@ -1,6 +1,6 @@
 import os
-from dataclasses import dataclass
 import subprocess
+from dataclasses import dataclass
 
 import click
 import yaml
@@ -27,7 +27,9 @@ class Config:
             cleaned = {
                 **merged,
                 "config_dir": os.path.abspath(merged["config_dir"]),
-                "kubeconfig": os.path.abspath(os.path.join(merged["config_dir"], merged["kubeconfig"])),
+                "kubeconfig": os.path.abspath(
+                    os.path.join(merged["config_dir"], merged["kubeconfig"])
+                ),
             }
 
             return Config(**cleaned)
@@ -45,10 +47,25 @@ def cli(ctx, config, verbose):
 
 
 @cli.command("init", help="Initialises the k8senv config")
-@click.option("--env", multiple=True, default=["prod", "stage"], help="The environment names to initialise")
-@click.option("--update-gitignore/--no-update-gitignore", default=True, help="Flag to add the config dir to gitignore")
-@click.option("--config-dir", default="./.kube", help="The directory to store the cluster configs")
-@click.option("--force/--no-force", default=False, help="Flag to override the existing config if it exists")
+@click.option(
+    "--env",
+    multiple=True,
+    default=["prod", "stage"],
+    help="The environment names to initialise",
+)
+@click.option(
+    "--update-gitignore/--no-update-gitignore",
+    default=True,
+    help="Flag to add the config dir to gitignore",
+)
+@click.option(
+    "--config-dir", default="./.kube", help="The directory to store the cluster configs"
+)
+@click.option(
+    "--force/--no-force",
+    default=False,
+    help="Flag to override the existing config if it exists",
+)
 @click.pass_context
 def init(ctx, env, update_gitignore, config_dir, force):
     if not force and os.path.exists(ctx.obj["k8senv_config_path"]):
@@ -58,18 +75,14 @@ def init(ctx, env, update_gitignore, config_dir, force):
             err=True,
             fg="red",
         )
-        return 1
+        raise click.Abort()
 
     # build and write out the config
     config = {
         "default": {
             "config_dir": config_dir,
         },
-        "envs": {
-            e: {
-                "kubeconfig": e
-            } for e in env
-        }
+        "envs": {e: {"kubeconfig": f"{e}.yaml"} for e in env},
     }
 
     with open(ctx.obj["k8senv_config_path"], "w") as f:
@@ -88,12 +101,13 @@ def init(ctx, env, update_gitignore, config_dir, force):
         config_dir_parent = os.path.dirname(config_dir)
 
         with open(os.path.join(config_dir_parent, ".gitignore"), "a") as f:
-            f.writelines([
-                "\n",
-                f"{config_dir}/*",
-                f"!{config_dir}/README.md",
-                "\n"
-            ])
+            f.writelines(
+                [
+                    "\n",
+                    f"{config_dir}/*\n",
+                    f"!{config_dir}/README.md\n",
+                ]
+            )
 
 
 @cli.command()
@@ -101,6 +115,10 @@ def init(ctx, env, update_gitignore, config_dir, force):
 @click.argument("cmd", nargs=-1)
 @click.pass_context
 def run(ctx, env, cmd):
+    if len(cmd) == 0:
+        click.secho(f"No command provided: Aborting", err=True, fg="yellow")
+        raise click.Abort()
+
     config = Config.from_source(ctx.obj["k8senv_config_path"], env)
 
     command = [
@@ -109,7 +127,7 @@ def run(ctx, env, cmd):
         *cmd,
     ]
 
-    if ctx.obj["verbose"]:
+    if ctx.obj["verbose"]:  # pragma: no cover
         click.echo(f"Running command '{' '.join(command)}'")
 
     return subprocess.run(command)
@@ -119,7 +137,7 @@ def run(ctx, env, cmd):
     help=(
         "Lists all environments. If there is a configuration error or missing cluster config a warning is given "
         "(no validation is done on the kubernetes config, only the k8senv config)"
-     )
+    )
 )
 @click.pass_context
 def ls(ctx):
@@ -133,6 +151,8 @@ def ls(ctx):
             if os.path.exists(config.kubeconfig):
                 click.secho(env, fg="green")
             else:
-                click.secho(f"{env} (cluster config file missing)", err=True, fg="yellow")
-        except TypeError:
-            click.secho(f"{env} (config error)", fg="red")
+                click.secho(
+                    f"{env} (cluster config file missing)", err=True, fg="yellow"
+                )
+        except (TypeError, KeyError):
+            click.secho(f"{env} (config error)", err=True, fg="red")
