@@ -19,8 +19,8 @@ def test_config_doesnt_exist___default_config_is_created():
                 "config_dir": "./.kube",
             },
             "envs": {
-                "stage": {"kubeconfig": f"stage.yaml"},
-                "prod": {"kubeconfig": f"prod.yaml"},
+                "stage": {"kubeconfig": "stage.yaml"},
+                "prod": {"kubeconfig": "prod.yaml"},
             },
         }
 
@@ -61,8 +61,8 @@ def test_config_does_exist_force_is_set___config_is_replaced():
                 "config_dir": "./.kube",
             },
             "envs": {
-                "stage": {"kubeconfig": f"stage.yaml"},
-                "prod": {"kubeconfig": f"prod.yaml"},
+                "stage": {"kubeconfig": "stage.yaml"},
+                "prod": {"kubeconfig": "prod.yaml"},
             },
         }
 
@@ -80,8 +80,8 @@ def test_envs_are_provided___config_is_created():
                 "config_dir": "./.kube",
             },
             "envs": {
-                "first": {"kubeconfig": f"first.yaml"},
-                "second": {"kubeconfig": f"second.yaml"},
+                "first": {"kubeconfig": "first.yaml"},
+                "second": {"kubeconfig": "second.yaml"},
             },
         }
 

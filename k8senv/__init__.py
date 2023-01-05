@@ -116,7 +116,7 @@ def init(ctx, env, update_gitignore, config_dir, force):
 @click.pass_context
 def run(ctx, env, cmd):
     if len(cmd) == 0:
-        click.secho(f"No command provided: Aborting", err=True, fg="yellow")
+        click.secho("No command provided: Aborting", err=True, fg="yellow")
         raise click.Abort()
 
     config = Config.from_source(ctx.obj["k8senv_config_path"], env)

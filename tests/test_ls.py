@@ -1,8 +1,5 @@
-import json
 import os.path
-from unittest.mock import patch
 
-import click
 import pytest
 import yaml
 from click.testing import CliRunner
