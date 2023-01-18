@@ -16,7 +16,7 @@ def test_config_doesnt_exist___default_config_is_created():
 
         assert config == {
             "default": {
-                "config_dir": "./.kube",
+                "config_dir": ".kube",
             },
             "envs": {
                 "stage": {"kubeconfig": "stage.yaml"},
@@ -58,7 +58,7 @@ def test_config_does_exist_force_is_set___config_is_replaced():
         assert result.exit_code == 0
         assert config == {
             "default": {
-                "config_dir": "./.kube",
+                "config_dir": ".kube",
             },
             "envs": {
                 "stage": {"kubeconfig": "stage.yaml"},
@@ -77,7 +77,7 @@ def test_envs_are_provided___config_is_created():
 
         assert config == {
             "default": {
-                "config_dir": "./.kube",
+                "config_dir": ".kube",
             },
             "envs": {
                 "first": {"kubeconfig": "first.yaml"},
@@ -113,8 +113,8 @@ def test_gitignore_doesnt_exist___gitignore_is_created():
         with open("./.gitignore") as f:
             assert [
                 "",
-                "./.kube/*",
-                "!./.kube/README.md",
+                ".kube/*",
+                "!.kube/README.md",
                 "",
             ] == f.read().split("\n")
 
@@ -131,8 +131,8 @@ def test_gitignore_exists___gitignore_is_appended_to():
             assert [
                 "orig",
                 "",
-                "./.kube/*",
-                "!./.kube/README.md",
+                ".kube/*",
+                "!.kube/README.md",
                 "",
             ] == f.read().split("\n")
 

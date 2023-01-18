@@ -59,7 +59,7 @@ def cli(ctx, config, verbose):
     help="Flag to add the config dir to gitignore",
 )
 @click.option(
-    "--config-dir", default="./.kube", help="The directory to store the cluster configs"
+    "--config-dir", default=".kube", help="The directory to store the cluster configs"
 )
 @click.option(
     "--force/--no-force",
