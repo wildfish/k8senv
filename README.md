@@ -8,7 +8,7 @@ Installation
 ------------
 
 ```shell
-$> pip install -e git@github.com:wildfish/k8senv.git
+$> pip install -e git+ssh://git@github.com/wildfish/k8senv.git#egg=k8senv
 ```
 
 Setup
